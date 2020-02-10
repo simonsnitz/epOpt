@@ -1,4 +1,5 @@
 import sys
+import random
 
 CDS = sys.argv[1]
 
@@ -7,6 +8,10 @@ with open(CDS) as seqfile:
 
     seq = f[1]
     seqLen = (len(seq)-1)/3
+    
+    worst = {
+            'A':6,'C':6,'D':7,'E':6,'F':6,'G':4,'H':7,'I':6,'K':6,'L':4,'M':6,'N':7,'P':6,'Q':6,'R':4,'S':4,'T':5,'V':5,'W':5,'Y':6 }
+
     values = {
             'AAA':6,
             'AAC':7,
@@ -78,6 +83,13 @@ with open(CDS) as seqfile:
             }
     protein = {}
 
+    def calcWorstScore(x):
+        score = 0
+        proLen = len(x)
+        for i in range(0,proLen-1):
+            score += worst[x[i]]
+        print(score)
+    
     def calcEvScore(x):
         score = 0
         codon = ''
@@ -94,35 +106,34 @@ with open(CDS) as seqfile:
         for i in range(0,aalen):
             m = 3*i
             codon = x[m]+x[m+1]+x[m+2]
-            if codon == 'GGA':
-                newCDS += 'GGC'
-            elif codon == 'TTA':
-                newCDS += 'CTC'
-            elif codon == 'TCA':
-                newCDS += 'TCC'
-            elif codon == 'CGA':
-                newCDS += 'CGC'
+                #Glycine
+            if codon == ('GGA'or'GGG'):
+                newCDS += random.choice(['GGC','GGT'])
+                #Leucine
+            elif codon == ('TTA'or'TTG'or'CTA'or'CTG'):
+                newCDS += random.choice(['CTC','CTT'])
+                #Serine
+            elif codon == ('TCA'or'TCG'):
+                newCDS += random.choice(['TCC','TCT','AGC','AGT'])
+                #Arginine
+            elif codon == ('CGA'or'CGG'or'AGA'):
+                newCDS += random.choice(['CGC','CGT','AGG'])
+                #Threonine
+            elif codon == ('ACC'or'ACT'):
+                newCDS += random.choice(['ACA','ACG'])
+                #Isoleucine
+            elif codon == 'ATA':
+                newCDS += random.choice(['ATC','ATT'])
+                #Valine
+            elif codon == ('GTA'or'GTG'):
+                newCDS += random.choice(['GTC','GTT'])
             else:
                 newCDS += codon
         print(newCDS)
         return newCDS
     
-    '''
-    for i in range(0,int(seqLen)):
-        m = 3*i
-        protein[i] = seq[m]+seq[m+1]+seq[m+2]
-        evScore += values[protein[i]]
-    
-        if protein[i] == 'GGA':
-            newCDS += 'GGC'
-        else:
-            newCDS += protein[i]
-        
-        evScoreNewCDS += 
-    '''
-    calcEvScore(seq)
-    newCDS = optEvScore(seq)
-    
-    calcEvScore(newCDS)
-    #print(newCDS)
-    #print(protein)
+    #calcEvScore(seq)
+    #newCDS = optEvScore(seq)
+    #calcEvScore(newCDS)
+    calcWorstScore(seq)
+
