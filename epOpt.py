@@ -9,80 +9,24 @@ with open(CDS) as seqfile:
     seq = f[1]
     seqLen = (len(seq)-1)/3
     
-    worst = {
-            'A':6,'C':6,'D':7,'E':6,'F':6,'G':4,'H':7,'I':6,'K':6,'L':4,'M':6,'N':7,'P':6,'Q':6,'R':4,'S':4,'T':5,'V':5,'W':5,'Y':6 }
+    worst = {'A':6,'C':6,'D':7,'E':6,'F':6,'G':4,'H':7,'I':6,'K':6,'L':4,'M':6,'N':7,'P':6,'Q':6,'R':4,'S':4,'T':5,'V':5,'W':5,'Y':6 }
 
-    values = {
-            'AAA':6,
-            'AAC':7,
-            'AAG':6,
-            'AAT':7,
-            'ACA':6,
-            'ACC':5,
-            'ACG':6,
-            'ACT':5,
-            'AGA':5,
-            'AGC':6,
-            'AGG':6,
-            'AGT':6,
-            'ATA':6,
-            'ATC':7,
-            'ATG':6,
-            'ATT':7,
-            
-            'CAA':6,
-            'CAC':7,
-            'CAG':6,
-            'CAT':7,
-            'CCA':6,
-            'CCC':6,
-            'CCG':6,
-            'CCT':6,
-            'CGA':4,
-            'CGC':6,
-            'CGG':5,
-            'CGT':6,
-            'CTA':5,
-            'CTC':6,
-            'CTG':5,
-            'CTT':6,
-            
-            'GAA':6,
-            'GAC':7,
-            'GAG':6,
-            'GAT':7,
-            'GCA':6,
-            'GCC':6,
-            'GCG':6,
-            'GCT':6,
-            'GGA':4,
-            'GGC':6,
-            'GGG':5,
-            'GGT':6,
-            'GTA':5,
-            'GTC':6,
-            'GTG':5,
-            'GTT':6,
-            
-            'TAA':0,
-            'TAC':6,
-            'TAG':0,
-            'TAT':6,
-            'TCA':4,
-            'TCC':6,
-            'TCG':5,
-            'TCT':6,
-            'TGA':0,
-            'TGC':6,
-            'TGG':5,
-            'TGT':6,
-            'TTA':4,
-            'TTC':6,
-            'TTG':5,
-            'TTT':6,
-            }
-    protein = {}
-
+    translationTable = { 'AAA':'K','AAC':'N','AAG':'K','AAT':'N','ACA':'T','ACC':'T','ACG':'T','ACT':'T','AGA':'R','AGC':'S','AGG':'R','AGT':'S','ATA':'I','ATC':'I','ATG':'M','ATT':'I','CAA':'Q','CAC':'H','CAG':'Q','CAT':'H','CCA':'P','CCC':'P','CCG':'P','CCT':'P','CGA':'R','CGC':'R','CGG':'R','CGT':'R','CTA':'L','CTC':'L','CTG':'L','CTT':'L','GAA':'E','GAC':'D','GAG':'E','GAT':'D','GCA':'A','GCC':'A','GCG':'A','GCT':'A','GGA':'G','GGC':'G','GGG':'G','GGT':'G','GTA':'V','GTC':'V','GTG':'V','GTT':'V','TAA':'STOP','TAC':'Y','TAG':'STOP','TAT':'Y','TCA':'S','TCC':'S','TCG':'S','TCT':'S','TGA':'STOP','TGC':'C','TGG':'W','TGT':'C','TTA':'L','TTC':'F','TTG':'L','TTT':'F'}
+    
+    values = {'AAA':6,'AAC':7,'AAG':6,'AAT':7,'ACA':6,'ACC':5,'ACG':6,'ACT':5,'AGA':5,'AGC':6,'AGG':6,'AGT':6,'ATA':6,'ATC':7,'ATG':6,'ATT':7,'CAA':6,'CAC':7,'CAG':6,'CAT':7,'CCA':6,'CCC':6,'CCG':6,'CCT':6,'CGA':4,'CGC':6,'CGG':5,'CGT':6,'CTA':5,'CTC':6,'CTG':5,'CTT':6,'GAA':6,'GAC':7,'GAG':6,'GAT':7,'GCA':6,'GCC':6,'GCG':6,'GCT':6,'GGA':4,'GGC':6,'GGG':5,'GGT':6,'GTA':5,'GTC':6,'GTG':5,'GTT':6,'TAA':0,'TAC':6,'TAG':0,'TAT':6,'TCA':4,'TCC':6,'TCG':5,'TCT':6,'TGA':0,'TGC':6,'TGG':5,'TGT':6,'TTA':4,'TTC':6,'TTG':5,'TTT':6}
+    
+    def translate(x):
+        protein = ''
+        proteinLen = int((len(x)+1)/3)
+        for i in range(0, proteinLen):
+            m = 3*i
+            codon = x[m]+x[m+1]+x[m+2]
+            if translationTable[codon] == 'STOP':
+                break
+            protein = protein + translationTable[codon]
+        print(protein)
+        return protein
+        
     def calcWorstScore(x):
         score = 0
         proLen = len(x)
@@ -132,8 +76,8 @@ with open(CDS) as seqfile:
         print(newCDS)
         return newCDS
     
-    #calcEvScore(seq)
-    #newCDS = optEvScore(seq)
-    #calcEvScore(newCDS)
-    calcWorstScore(seq)
+    calcEvScore(seq)
+    newCDS = optEvScore(seq)
+    calcEvScore(newCDS)
+    calcWorstScore(translate(seq))
 
